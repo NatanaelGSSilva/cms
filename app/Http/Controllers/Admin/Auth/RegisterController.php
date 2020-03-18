@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Admin\Auth;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\User;
-use Illuminate\Foundation\Auth\RegistersUsers;
+// use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth; // importacao de cadastro uma vez cadastrado
 
 class RegisterController extends Controller
 {
@@ -24,7 +24,7 @@ class RegisterController extends Controller
     |
     */
 
-    use RegistersUsers;
+    // use RegistersUsers;
 
     /**
      * Where to redirect users after registration.
@@ -32,7 +32,7 @@ class RegisterController extends Controller
      * @var string
      */
     // protected $redirectTo = RouteServiceProvider::HOME;
-    protected $redirectTo = '/config';
+    protected $redirectTo = '/painel';
 
     /**
      * Create a new controller instance.
@@ -44,20 +44,20 @@ class RegisterController extends Controller
         $this->middleware('guest');
     }
 
-    public function index(){
-        return view('register');
+    public function index(){// abrir o formulario deregistro
+        return view('admin.register');
     }
-    public function register(Request $request){
+    public function register(Request $request){// que é o que vai receber
         $data = $request->only(['name','email','password','password_confirmation']);
         $validator = $this->validator($data);
 
-        if($validator->fails()){
+        if($validator->fails()){// se der o processo errado
             return redirect()->route('register')->withErrors($validator)->withInput();// essa ultima função retorna com os dados que ousuario digitou
         }
 
-        $user = $this->create($data);
+        $user = $this->create($data);// receber os dados criados por esse usuario
         Auth::login($user);// logou o usuario
-        return redirect()->route('config.index');// mandar para uma tela
+        return redirect()->route('admin');// mandar para uma tela
     }
 
     /**
@@ -70,7 +70,7 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:100'],
-            'email' => ['required', 'string', 'email', 'max:200', 'unique:users'],
+            'email' => ['required', 'string', 'email', 'max:100', 'unique:users'],
             'password' => ['required', 'string', 'min:4', 'confirmed'],
         ]);
     }

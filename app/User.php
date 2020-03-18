@@ -10,7 +10,7 @@ class User extends Authenticatable
 {
     use Notifiable;
 
-    protected $timestamps = false; // para ele tirar os campos da tabela create e update
+    public $timestamps = false; // para ele tirar os campos da tabela create e update
     /**
      * The attributes that are mass assignable.
      *

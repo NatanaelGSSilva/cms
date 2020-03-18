@@ -16,5 +16,18 @@ use Illuminate\Support\Facades\Route;
 Route::get('/','Site\HomeController@index');// parte frontal do meu sistema
 
 Route::prefix('painel')->group(function(){ // parte traseira do meu sistema
-    Route::get('/','Admin\HomeController@index');
+    Route::get('/','Admin\HomeController@index')->name('admin');
+
+    Route::get('login','Admin\Auth\LoginController@index')->name('login');
+    Route::post('login','Admin\Auth\LoginController@authenticate');// vai ser a action que vai receber os dados do post do login e vai fazer a autentificcao
+
+    Route::get('register','Admin\Auth\RegisterController@index')->name('register');
+    Route::post('register','Admin\Auth\RegisterController@register');// vai receber o post do registro
+
+    Route::post('logout','Admin\Auth\LoginController@logout')->name('logout');
+
+
+    Route::resource('users','Admin\UsersController');// criei o crud de usuarios
+
+
 });
