@@ -127,11 +127,11 @@ class UsersController extends Controller
 
             ]);// fazer as validações se falhou algo
 
-                if($validator->fails()){
-                    return redirect()->route('users.edit',[
-                        'user'=>$id
-                    ])->withErrors($validator);
-                }
+                // if($validator->fails()){
+                //     return redirect()->route('users.edit',[
+                //         'user'=>$id
+                //     ])->withErrors($validator);
+                // }
 
             // 1.alteração do nome,
                 $user->name = $data['name'];// alterar o nome do cara
@@ -145,20 +145,52 @@ class UsersController extends Controller
                      // 2.3 se não existir nos alteramos
                      if(count($hasEmail)===0){
                          $user->email = $data['email'];// alterar o email
+                     }else{
+                        $validator->errors()->add// mensagem de erro caso noa tenha 4 caracteres
+                        ('email',__('validation.unique',[
+                            'attribute'=>'email'
+
+                        ]));
                      }
+
+                }
+
+            // 3.0 alteração da senha
+            // 3.1 Verifica se o usuario digitou senha
+                if(!empty($data['password'])){
+                    // 3.2 verifica se a confirmação esta ok
+                    if(strlen($data['password'])>=4){// verifica se a senha digitada e maior que 4
+                    if($data['password'] === $data['password_confirmation']){
+                         // 3.3 altera a senha
+                        $user->password = Hash::make($data['password']);// troca a senha
+                    }else{
+                        $validator->errors()->add// mensagem de erro caso noa tenha 4 caracteres
+                        ('password',__('validation.confirmed',[
+                            'attribute'=>'password'
+
+                        ]));
+                    }
+                }else{
+                    $validator->errors()->add// mensagem de erro caso noa tenha 4 caracteres
+                    ('password',__('validation.min.string',[
+                        'attribute'=>'password',
+                        'min'=>4
+                    ]));
 
 
                 }
 
-            // alteração da senha,
-            // verifica se a confirmação esta ok,
-            // altera a senha,
+                }
+                if(count( $validator->errors())>0){
+                    return redirect()->route('users.edit',[
+                                 'user'=>$id
+                            ])->withErrors($validator); // nofinalde tudo ele faz o redirect
+                }
 
-            //$user->save();
+            $user->save();
         }
 
-        // return redirect()->route('users.index'); // vai voltar para lista
-
+        return redirect()->route('users.index'); // vai voltar para lista
 
     }
 
