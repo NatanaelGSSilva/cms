@@ -110,7 +110,56 @@ class UsersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        echo "Recebendo os dados";
+        $user = User::find($id);// receber um usuario
+        if($user){// verificar se é um usuario existente
+            $data = $request->only([
+                'name',
+                'email',
+                'password',
+                'password_confirmation'
+            ]);// pegar os dados dos campos
+            $validator = Validator::make([
+                'name'=>$data['name'],
+                'email'=>$data['email']
+            ],[ // que locura isso(regras que a gente precisa validar)
+                'name'=>['required','string','max:100'],
+                'email'=>['required','string','email','max:100']// validação geral
+
+            ]);// fazer as validações se falhou algo
+
+                if($validator->fails()){
+                    return redirect()->route('users.edit',[
+                        'user'=>$id
+                    ])->withErrors($validator);
+                }
+
+            // 1.alteração do nome,
+                $user->name = $data['name'];// alterar o nome do cara
+
+
+            //2. alteração do email
+            //2.1 primeiro verificamos se o email foi alterado
+                if($user->email != $data['email']){// que dizer que o email foi alterado
+                     // 2.2 verificamos se o novo email ja existe
+                     $hasEmail = User::where('email',$data['email'])->get();// verificar se tem um usuario com aquele email
+                     // 2.3 se não existir nos alteramos
+                     if(count($hasEmail)===0){
+                         $user->email = $data['email'];// alterar o email
+                     }
+
+
+                }
+
+            // alteração da senha,
+            // verifica se a confirmação esta ok,
+            // altera a senha,
+
+            //$user->save();
+        }
+
+        // return redirect()->route('users.index'); // vai voltar para lista
+
+
     }
 
     /**
