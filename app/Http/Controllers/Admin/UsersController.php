@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Auth;
 
 class UsersController extends Controller
 {
+    public function __construct(){
+        $this->middleware('auth');// todo esse controlle dele todas as actions dele estajam baseada na autentificação o cara tem que estar logado para acessar ele
+    }
     /**
      * Display a listing of the resource.
      *
@@ -21,9 +24,11 @@ class UsersController extends Controller
     {
         // $users = User::all();// dessa forma pego todos os usuarios
         $users = User::paginate(6);// dessa forma pego todos os usuarios
+        $loggedId = intval(Auth::id());// pegar o usuario logado
 
         return view('admin.users.index',[// mandar um array de exibição
-            'users'=>$users
+            'users'=>$users,
+            'loggedId'=>$loggedId
         ]);
     }
 
