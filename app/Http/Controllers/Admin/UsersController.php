@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\User;// ter acesso ao banco de dados
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+
 
 
 class UsersController extends Controller
@@ -202,6 +204,14 @@ class UsersController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // 1 coisa que precisamos fazer
+        $loggedId = intVal(Auth::id());// pegar o usurio logado
+
+        if($loggedId !== intVal($id)){// se o id logado for totalmente diferente do id logado
+            $user  = User::find($id);// pegar o id
+            $user->delete();// deletar o usuario que nãoestiver logado
+        }
+
+        return redirect()->route('users.index');
     }
 }

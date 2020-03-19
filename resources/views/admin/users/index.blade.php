@@ -32,7 +32,12 @@
                     <td>{{$user->email}}</td>
                     <td>
                         <a href="{{route('users.edit',['user'=>$user->id])}}" class="btn btn-sm btn-info">Editar</a>
-                        <a href="{{route('users.destroy',['user'=>$user->id])}}" class="btn btn-sm btn-danger">Excluir</a>
+                        <form class = "d-inline"  method="POST" action="{{route('users.destroy',['user'=>$user->id])}}" onsubmit="return confirm('tem certeza que deseja excluir')">
+                            @method('DELETE')
+                            @csrf
+                            <button class="btn btn-sm btn-danger">Excluir</button>
+                        </form>
+
                     </td>
                 </tr>
             @endforeach
