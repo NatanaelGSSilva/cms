@@ -25,6 +25,8 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        Gate::define('edit-users',function($user){// recebo o proprio usuario para fazer a verificação
+            return $user->admin ===1;
+        });// permissão de editar usuarios
     }
 }

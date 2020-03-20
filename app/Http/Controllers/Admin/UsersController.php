@@ -14,6 +14,7 @@ class UsersController extends Controller
 {
     public function __construct(){
         $this->middleware('auth');// todo esse controlle dele todas as actions dele estajam baseada na autentificação o cara tem que estar logado para acessar ele
+        $this->middleware('can:edit-users');// mais uma proteção de usuario esperto
     }
     /**
      * Display a listing of the resource.

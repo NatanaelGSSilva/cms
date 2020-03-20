@@ -215,7 +215,8 @@ return [
         [
             'text'        => 'Meus Usúarios',
             'url'         => 'painel/users',
-            'icon'        => 'far fa-fw fa-file'
+            'icon'        => 'far fa-fw fa-file',
+            'can'         => 'edit-users' // so usuarios que tenha a condição igual a 1 podem ver esse menu
             // 'label'       => 4,
             // 'label_color' => 'success',
         ],
