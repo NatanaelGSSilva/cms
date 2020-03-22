@@ -98,7 +98,7 @@ class UsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id)// edit exibe o formulario
     {
         $user = User::find($id);
         if($user){
@@ -116,7 +116,7 @@ class UsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id)// salva as informacoes do formulario
     {
         $user = User::find($id);// receber um usuario
         if($user){// verificar se é um usuario existente
