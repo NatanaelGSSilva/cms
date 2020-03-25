@@ -28,12 +28,15 @@ Route::prefix('painel')->group(function(){ // parte traseira do meu sistema
 
 
     Route::resource('users','Admin\UsersController');// criei o crud de usuarios
+    Route::resource('pages','Admin\PageController');// cria um crud
 
     Route::get('profile','Admin\ProfileController@index')->name('profile');// nome da rota direcionar e metodo
     Route::put('profilesave','Admin\ProfileController@save')->name('profile.save');
 
     Route::get('settings','Admin\SettingController@index')->name('settings');
     Route::put('settingssave','Admin\SettingController@save')->name('settings.save');
+
+
 
 
 });
