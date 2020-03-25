@@ -36,10 +36,14 @@ class SettingController extends Controller
                 return redirect()->route('settings')
                 ->withErrors($validator);
             }
-            // salvar
-            echo "salvando";
+            foreach ($data as $item => $value) {// alterar um item
+                Setting::where('name',$item)->update([
+                    'content'=>$value
+                ]);
+            }
 
-            //return redirect()->route('settings');
+            return redirect()->route('settings')
+            ->with('warning','Informações alteradas com sucesso!');
     }
 
 
