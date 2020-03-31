@@ -101,9 +101,15 @@ class PageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id) // mostra o formulario de edição
     {
-        //
+        $page = Page::find($id);// procura a pagina
+        if($page){// achou o id
+        return view('admin.pages.edit',[
+            'page'=>$page // mandar as informaç~es da pagina
+        ]);
+        }
+        return redirect()->route('pages.index'); // vai voltar para lista
     }
 
     /**
@@ -115,7 +121,55 @@ class PageController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
+        $page = Page::find($id);// receber uma pagina
+        if($page){// verificar se é um usuario existente
+            $data = $request->only([
+                'title',
+                'body'
+
+            ]);// pegar os dados dos campos
+
+            if($page['title'] !== $data['title']){// alterou o titulo
+                $data['slug'] = Str::slug($data['title'],'-');// adicionei o slug
+
+                $validator = Validator::make($data,[
+                    'title'=>['required','string','max:100'],
+                    'body'=>['string'],
+                    'slug' =>['required','string','max:100','unique:pages']
+                    ]);
+            }else{
+                $validator = Validator::make($data,[// validador basicao para quando eu nao alterei o titulo
+                'title'=>['required','string','max:100'],
+                'body'=>['string']
+                ]);
+            }
+
+            if($validator->fails()){// caso deu problema
+                return redirect()->route('pages.edit',[
+                    'page' =>$id
+                ])
+                ->withErrors($validator)
+                ->withInput();// para ele voltar os campos
+            }
+
+
+            // 1.alteração da pagina,
+                $page->title = $data['title'];// alterar o nome da pagina
+                // $page->slug = $data['slug'];// alterar o nome da pagina
+                 $page->body= $data['body'];
+
+                 if(!empty($data['slug'])){// verificar o proprio slug
+                //  if($page['slug'] !== $data['slug']){// verificar o proprio slug
+                      $page->slug = $data['slug'];// alterar o nome da pagina
+                 }
+
+            $page->save();
+        }
+
+        return redirect()->route('pages.index'); // vai voltar para lista
+
+
     }
 
     /**
