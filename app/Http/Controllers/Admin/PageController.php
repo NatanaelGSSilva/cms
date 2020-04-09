@@ -180,6 +180,10 @@ class PageController extends Controller
      */
     public function destroy($id)
     {
-        //
+
+        $page = Page::find($id); // pegar o id da pagina
+        $page->delete();// deletar essa pagina
+        return redirect()->route('pages.index');
+
     }
 }
